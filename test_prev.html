@@ -1,0 +1,1296 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>자치교육사회적협동조합 길잡이</title>
+<meta name="description" content="청소년이 정해진 길 대신 스스로 길을 만드는 자치교육을 보급합니다.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Serif+KR:wght@400;700;900&family=Noto+Sans+KR:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+<style>
+/* ── TOKENS & VARIABLES ── */
+:root {
+  --font-display: 'Noto Serif KR', Georgia, serif;
+  --font-body: 'Noto Sans KR', 'Apple SD Gothic Neo', sans-serif;
+
+  --text-xs:   clamp(0.75rem,  0.7rem  + 0.25vw, 0.875rem);
+  --text-sm:   clamp(0.875rem, 0.8rem  + 0.35vw, 1rem);
+  --text-base: clamp(1rem,     0.95rem + 0.25vw, 1.125rem);
+  --text-lg:   clamp(1.125rem, 1.05rem + 0.35vw, 1.25rem);
+  --text-xl:   clamp(1.25rem,  1.15rem + 0.5vw,  1.5rem);
+  --text-2xl:  clamp(1.5rem,   1.35rem + 0.75vw, 2rem);
+  --text-3xl:  clamp(1.75rem,  1.5rem  + 1.25vw, 2.75rem);
+  --text-4xl:  clamp(2.25rem,  2rem    + 1.75vw, 3.75rem);
+
+  /* 로고 색상 반영 및 테마 조합 */
+  --color-primary: #F7982A;
+  --color-primary-dark: #D67D18;
+  --color-primary-light: #FFF4E6;
+  --color-bg: #FAFAFA;
+  --color-surface: #FFFFFF;
+  --color-text-main: #222222;
+  --color-text-muted: #666666;
+  --color-border: #E5E5E5;
+  --color-dark-section: #1A1A1A;
+  --color-stats-bg: #F7982A;
+
+  --shadow-sm: 0 2px 8px rgba(0,0,0,0.04);
+  --shadow-md: 0 8px 24px rgba(247,152,42,0.15);
+  --shadow-lg: 0 16px 40px rgba(0,0,0,0.08);
+  --radius: 12px;
+  --transition: all 0.35s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+/* ── RESET & BASE ── */
+* { box-sizing: border-box; margin: 0; padding: 0; }
+body {
+  font-family: var(--font-body);
+  background-color: var(--color-bg);
+  color: var(--color-text-main);
+  line-height: 1.65;
+  -webkit-font-smoothing: antialiased;
+  word-break: keep-all;
+}
+a { color: inherit; text-decoration: none; }
+button, input, textarea, select { font-family: inherit; font-size: inherit; color: inherit; }
+button { cursor: pointer; border: none; background: none; }
+img { max-width: 100%; height: auto; display: block; }
+.hidden { display: none !important; }
+
+/* ── LAYOUT ── */
+.container { max-width: 1200px; margin: 0 auto; padding: 0 24px; }
+section { padding: clamp(4rem, 8vw, 6rem) 0; }
+
+/* ── HEADER NAVIGATION ── */
+header {
+  position: sticky; top: 0; z-index: 100;
+  background-color: rgba(255, 255, 255, 0.95);
+  backdrop-filter: blur(12px);
+  border-bottom: 1px solid var(--color-border);
+  height: 65px; 
+}
+.header-inner { display: flex; justify-content: space-between; align-items: center; height: 100%; }
+
+/* 헤더 로고 */
+.logo-wrapper { display: flex; flex-direction: column; justify-content: center; font-family: var(--font-body); gap: 2px; text-decoration: none; }
+.logo-top { font-size: 11px; color: #000; font-weight: 700; line-height: 1; letter-spacing: -0.5px; }
+.logo-bottom { font-size: 24px; color: var(--color-primary); font-weight: 900; line-height: 1; letter-spacing: -1px; }
+
+/* 데스크탑 메뉴 */
+.nav-desktop { display: flex; gap: 32px; }
+.nav-link { font-size: var(--text-sm); font-weight: 500; color: var(--color-text-muted); position: relative; padding: 6px 0; transition: var(--transition); }
+.nav-link:hover, .nav-link.active { color: var(--color-primary); }
+.nav-link::after { content: ''; position: absolute; bottom: 0; left: 0; width: 0; height: 2px; background-color: var(--color-primary); transition: var(--transition); }
+.nav-link:hover::after, .nav-link.active::after { width: 100%; }
+
+/* 햄버거 메뉴 버튼 (기본 숨김) */
+.hamburger { display: none; flex-direction: column; justify-content: space-between; width: 26px; height: 18px; background: transparent; border: none; cursor: pointer; padding: 0; z-index: 101; }
+.hamburger span { display: block; width: 100%; height: 2.5px; background-color: var(--color-text-main); transition: var(--transition); border-radius: 2px; }
+
+/* 모바일 내비게이션 (오버레이) */
+.mobile-nav { position: fixed; top: 0; right: -100%; width: 100%; max-width: 360px; height: 100vh; background-color: var(--color-surface); z-index: 200; padding: 24px; display: flex; flex-direction: column; gap: 40px; transition: right 0.4s cubic-bezier(0.16, 1, 0.3, 1); box-shadow: -4px 0 24px rgba(0,0,0,0.1); overflow-y: auto; }
+.mobile-nav.open { right: 0; }
+.mobile-nav-header { display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid var(--color-border); padding-bottom: 20px; }
+.mobile-nav-close { font-size: 32px; color: var(--color-text-main); background: none; border: none; line-height: 1; cursor: pointer; padding: 4px; }
+.mobile-links { display: flex; flex-direction: column; gap: 8px; }
+.mobile-link { font-family: var(--font-body); font-size: 18px; font-weight: 700; color: var(--color-text-main); text-decoration: none; padding: 12px 16px; border-radius: 8px; transition: background 0.2s; }
+.mobile-link:hover, .mobile-link.active { background-color: var(--color-primary-light); color: var(--color-primary); }
+
+/* 모바일 오버레이 배경 */
+.mobile-overlay { position: fixed; top:0; left:0; width: 100%; height: 100%; background: rgba(0,0,0,0.5); z-index: 150; opacity: 0; pointer-events: none; transition: opacity 0.3s; }
+.mobile-overlay.open { opacity: 1; pointer-events: auto; }
+
+/* ── COMPONENTS ── */
+.section-tag { font-size: var(--text-xs); font-weight: 700; color: var(--color-primary); text-transform: uppercase; letter-spacing: 0.1em; margin-bottom: 12px; display: block; }
+.section-title { font-family: var(--font-display); font-size: var(--text-2xl); font-weight: 700; line-height: 1.3; margin-bottom: 24px; }
+.section-title span { color: var(--color-primary); }
+.section-desc { font-size: var(--text-base); color: var(--color-text-muted); max-width: 700px; margin-bottom: 48px; }
+
+.btn { display: inline-flex; align-items: center; justify-content: center; padding: 12px 24px; border-radius: var(--radius); font-size: var(--text-sm); font-weight: 600; transition: var(--transition); gap: 8px; }
+.btn-primary { background-color: var(--color-primary); color: white; }
+.btn-primary:hover { background-color: var(--color-primary-dark); transform: translateY(-2px); }
+.btn-secondary { background-color: transparent; color: var(--color-text-main); border: 1px solid var(--color-border); }
+.btn-secondary:hover { background-color: rgba(0,0,0,0.03); border-color: var(--color-text-main); }
+
+/* SCROLL REVEAL */
+.reveal { opacity: 0; transform: translateY(30px); transition: opacity 0.8s ease, transform 0.8s ease; }
+
+/* ── TAB: HOME ── */
+#hero { background: var(--color-surface); padding: clamp(4rem, 8vw, 8rem) 0; overflow: hidden; }
+.hero-container { display: flex; align-items: center; gap: 40px; }
+.hero-left { flex: 1; text-align: left; }
+.hero-left h1 { font-family: var(--font-display); font-size: var(--text-4xl); font-weight: 900; line-height: 1.25; margin-bottom: 24px; color: var(--color-text-main); }
+.hero-right { flex: 1; }
+.hero-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+
+.hero-box { border-radius: 24px; padding: 32px; display: flex; flex-direction: column; justify-content: flex-end; min-height: 240px; transition: transform 0.3s; }
+.hero-box h3 { font-size: 28px; font-weight: 900; margin-bottom: 8px; font-family: var(--font-display); }
+.hero-box p { font-size: 14px; opacity: 0.85; line-height: 1.5; font-weight: 500; }
+.box-1 { background-color: #d3f9f9; color: #2C6E6E; } 
+.box-2 { background-color: #F7EBE8; color: #8C4A3C; } 
+.box-3 { background-color: #F5EFE6; color: #735C3A; } 
+.box-4 { background-color: #F7982A; color: #ffffff; } 
+.hero-box:hover { transform: translateY(-4px); }
+
+/* STATS */
+.stats-banner { background-color: var(--color-stats-bg); color: white; padding: 48px 0; margin-bottom: 40px;}
+.stats-banner-inner { display: flex; justify-content: space-around; text-align: center; flex-wrap: wrap; gap: 24px; }
+.stat-item .stat-num { font-size: var(--text-4xl); font-weight: 900; font-family: var(--font-display); margin-bottom: 4px; }
+.stat-item .stat-label { font-size: var(--text-sm); font-weight: 600; opacity: 0.9; }
+
+/* MESSAGES */
+.msg-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 32px; }
+.msg-card { background: var(--color-surface); padding: 40px; border-radius: var(--radius); box-shadow: var(--shadow-sm); border: 1px solid var(--color-border); transition: var(--transition); text-align: left; }
+.msg-card:hover { transform: translateY(-8px); box-shadow: var(--shadow-md); border-color: var(--color-primary); }
+.msg-num { font-family: var(--font-display); font-size: var(--text-xl); font-weight: 900; color: var(--color-primary); margin-bottom: 24px; display: block; }
+.msg-card h3 { font-size: var(--text-lg); font-weight: 700; margin-bottom: 16px; }
+.msg-card p { font-size: var(--text-sm); color: var(--color-text-muted); text-align: left; line-height: 1.7; }
+
+/* ── TAB: INTRODUCE ── */
+.bg-white { background-color: var(--color-surface); }
+.bg-gray { background-color: var(--color-bg); }
+.mission-box { background-color: var(--color-primary-light); padding: 48px; border-radius: var(--radius); border-left: 6px solid var(--color-primary); margin-top: 32px; }
+.mission-text { font-family: var(--font-display); font-size: var(--text-xl); font-weight: 700; color: var(--color-text-main); line-height: 1.4; }
+
+/* VISION */
+.vision-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 32px; }
+.vision-card { background: var(--color-bg); padding: 40px; border-radius: var(--radius); border: 1px solid var(--color-border); }
+.vision-card h3 { font-size: var(--text-lg); font-weight: 700; margin-bottom: 16px; display: flex; gap: 12px; align-items: center; }
+.vision-idx { color: var(--color-primary); font-family: var(--font-display); font-weight: 700; }
+.vision-card p { font-size: var(--text-sm); color: var(--color-text-muted); }
+
+/* PROFILE */
+.profile-layout { display: grid; grid-template-columns: 1fr 1fr; gap: 64px; align-items: start; }
+.profile-content p { font-size: var(--text-base); color: var(--color-text-muted); margin-bottom: 24px; text-align: left; line-height: 1.75; }
+.info-table { width: 100%; border-collapse: collapse; margin-top: 16px; }
+.info-table th, .info-table td { padding: 14px 16px; border-bottom: 1px solid var(--color-border); text-align: left; font-size: var(--text-sm); }
+.info-table th { font-weight: 600; color: var(--color-text-main); width: 35%; background-color: rgba(0,0,0,0.01); }
+.info-table td { color: var(--color-text-muted); }
+
+/* CORE VALUES */
+.core-values-triangle { display: flex; flex-direction: column; align-items: center; gap: 24px; margin-top: 40px; }
+.cv-row { display: flex; gap: 40px; justify-content: center; }
+.cv-circle { width: 150px; height: 150px; border-radius: 50%; background: var(--color-primary); color: white; display: flex; align-items: center; justify-content: center; font-size: 18px; font-weight: 700; box-shadow: var(--shadow-md); transition: transform 0.3s; text-align: center; word-break: keep-all; padding: 20px; }
+.cv-circle:hover { transform: scale(1.05); }
+
+/* ACTIVITIES */
+.activity-list { display: flex; flex-direction: column; gap: 24px; }
+.activity-item { display: flex; gap: 32px; background: var(--color-surface); padding: 32px; border-radius: var(--radius); box-shadow: var(--shadow-sm); border: 1px solid var(--color-border); }
+.activity-left { font-family: var(--font-display); font-size: var(--text-xl); font-weight: 900; color: var(--color-primary); min-width: 40px; }
+.activity-right h4 { font-size: var(--text-lg); font-weight: 700; margin-bottom: 8px; }
+.activity-right p { font-size: var(--text-sm); color: var(--color-text-muted); }
+
+/* BUREAUS */
+.bureau-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 24px; }
+.bureau-card { background: var(--color-surface); padding: 32px; border-radius: var(--radius); border: 1px solid var(--color-border); box-shadow: var(--shadow-sm); }
+.bureau-card h4 { font-size: 1rem; font-weight: 700; margin-bottom: 12px; color: var(--color-text-main); border-bottom: 2px solid var(--color-primary); padding-bottom: 8px; display: inline-block; }
+.bureau-card p { font-size: var(--text-sm); color: var(--color-text-muted); margin-bottom: 8px; }
+
+/* ── TAB: DYNAMIC BOARDS (소식 & 아카이빙) ── */
+.board-header { margin-bottom: 40px; border-bottom: 1px solid var(--color-border); padding-bottom: 24px; }
+.board-actions { display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 16px; margin-top: 24px; }
+.filter-btns { display: flex; gap: 8px; flex-wrap: wrap; }
+.filter-btn { padding: 8px 16px; border-radius: 20px; font-size: var(--text-xs); font-weight: 500; border: 1px solid var(--color-border); background: #fff; transition: var(--transition); }
+.filter-btn.active, .filter-btn:hover { background: var(--color-primary); color: #fff; border-color: var(--color-primary); }
+
+.post-list { display: flex; flex-direction: column; }
+.post-item { display: flex; justify-content: space-between; align-items: flex-start; padding: 32px 0; border-bottom: 1px solid var(--color-border); gap: 40px; cursor: pointer; transition: background-color 0.2s; }
+.post-item:hover { background-color: rgba(247,152,42,0.03); }
+.post-left { flex: 1; text-align: left; }
+.post-meta { display: flex; gap: 12px; font-size: var(--text-xs); color: var(--color-text-muted); margin-bottom: 12px; align-items: center; }
+.post-cat { background: var(--color-primary-light); color: var(--color-primary); padding: 4px 10px; border-radius: 4px; font-weight: 700; }
+.post-title { font-size: var(--text-xl); font-weight: 700; margin-bottom: 12px; color: var(--color-text-main); }
+.post-excerpt { font-size: var(--text-sm); color: var(--color-text-muted); line-height: 1.6; text-align: left; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; }
+.post-right { width: 220px; flex-shrink: 0; }
+.post-img-wrapper { width: 100%; aspect-ratio: 16/10; border-radius: 8px; overflow: hidden; background: #eee; }
+.post-img-wrapper img { width: 100%; height: 100%; object-fit: cover; }
+
+.post-view { background: var(--color-surface); padding: 48px; border-radius: var(--radius); border: 1px solid var(--color-border); margin-bottom: 48px; }
+.post-detail-header { margin-bottom: 32px; border-bottom: 1px solid var(--color-border); padding-bottom: 24px;}
+.post-detail-title { font-size: var(--text-3xl); font-weight: 700; margin: 16px 0; color: var(--color-text-main); }
+
+.write-container { background: var(--color-surface); border: 1px solid var(--color-primary); border-radius: var(--radius); padding: 32px; margin-bottom: 48px; box-shadow: var(--shadow-sm); }
+.write-container h3 { font-size: 1.1rem; font-weight: 700; margin-bottom: 20px; color: var(--color-primary); }
+.form-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin-bottom: 16px; }
+.form-group { display: flex; flex-direction: column; gap: 8px; }
+.form-group.full { grid-column: span 2; }
+.form-group label { font-size: var(--text-xs); font-weight: 600; color: var(--color-text-main); }
+.form-group input, .form-group select, .form-group textarea { padding: 12px; border: 1px solid var(--color-border); border-radius: 6px; font-size: var(--text-sm); outline: none; transition: var(--transition); }
+.form-group input:focus, .form-group select:focus, .form-group textarea:focus { border-color: var(--color-primary); box-shadow: 0 0 0 3px rgba(247,152,42,0.15); }
+
+/* ── TAB: CONTACT ── */
+.contact-layout { display: grid; grid-template-columns: 4fr 5fr; gap: 64px; align-items: start; }
+.contact-info-pane { display: flex; flex-direction: column; gap: 40px; }
+.contact-meta-item { display: flex; gap: 20px; align-items: flex-start; }
+.contact-icon-box { width: 48px; height: 48px; border-radius: 50%; background: var(--color-primary-light); color: var(--color-primary); display: flex; align-items: center; justify-content: center; font-weight: 700; flex-shrink: 0; }
+.contact-meta-text h4 { font-size: var(--text-sm); font-weight: 700; margin-bottom: 4px; }
+.contact-meta-text p { font-size: var(--text-sm); color: var(--color-text-muted); }
+.contact-form-pane { background: var(--color-surface); padding: 48px; border-radius: var(--radius); box-shadow: var(--shadow-lg); border: 1px solid var(--color-border); }
+
+/* ── FOOTER ── */
+footer { background-color: var(--color-dark-section); padding: 24px 0; }
+.footer-row { display: flex; justify-content: center; align-items: center; flex-wrap: wrap; gap: 24px; }
+.footer-link, .footer-copyright { color: #999999; font-size: 13px; text-decoration: none; transition: var(--transition); }
+.footer-link:hover { color: var(--color-primary); }
+
+/* ── MODAL SYSTEM ── */
+.footer-modal-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background-color: rgba(0,0,0,0.6); z-index: 1000; display: flex; align-items: center; justify-content: center; opacity: 0; pointer-events: none; transition: opacity 0.3s ease; padding: 20px; }
+.footer-modal-overlay.open { opacity: 1; pointer-events: auto; }
+.footer-modal { background: var(--color-surface); width: 100%; max-width: 640px; max-height: 80vh; border-radius: var(--radius); overflow-y: auto; padding: 40px; position: relative; box-shadow: var(--shadow-lg); transform: translateY(20px); transition: transform 0.3s ease; }
+.footer-modal-overlay.open .footer-modal { transform: translateY(0); }
+.modal-close-btn { position: absolute; top: 24px; right: 24px; font-size: var(--text-xl); color: var(--color-text-muted); cursor: pointer; }
+.modal-content h3 { font-family: var(--font-display); font-size: var(--text-xl); margin-bottom: 20px; color: var(--color-text-main); }
+.modal-text { font-size: var(--text-sm); color: var(--color-text-muted); line-height: 1.7; text-align: left; white-space: pre-wrap; }
+
+
+/* ========================================= */
+/* ── RESPONSIVE / MOBILE OPTIMIZATION ── */
+/* ========================================= */
+@media (max-width: 1024px) {
+  .hero-container { flex-direction: column; text-align: center; }
+  .hero-left { text-align: center; margin-bottom: 40px; }
+  .msg-grid, .vision-grid { grid-template-columns: 1fr; gap: 24px; }
+  .profile-layout { grid-template-columns: 1fr; gap: 40px; }
+  .contact-layout { grid-template-columns: 1fr; gap: 48px; }
+}
+
+@media (max-width: 768px) {
+  /* 섹션 패딩 줄이기 */
+  section { padding: clamp(3rem, 6vw, 4rem) 0; }
+
+  /* 햄버거 메뉴 및 오버레이 활성화 */
+  .nav-desktop { display: none; }
+  .hamburger { display: flex; }
+
+  /* 메인 홈 배너 모바일 */
+  .hero-left h1 { font-size: var(--text-3xl); line-height: 1.3; }
+  .hero-desc { font-size: var(--text-sm); }
+  .hero-btns { flex-direction: column; width: 100%; max-width: 300px; margin: 0 auto; }
+  .hero-grid { grid-template-columns: 1fr 1fr; gap: 12px; }
+  .hero-box { min-height: 160px; padding: 20px; border-radius: 16px; }
+  .hero-box h3 { font-size: 20px; margin-bottom: 4px; }
+  .hero-box p { font-size: 12px; }
+
+  /* 통계 모바일 (2열) */
+  .stats-banner-inner { grid-template-columns: 1fr 1fr; display: grid; gap: 24px 16px; }
+  
+  /* 모바일 그리드 (1열) */
+  .bureau-grid { grid-template-columns: 1fr; }
+
+  /* 길잡이 소개 삼각형 (모바일 사이즈 축소) */
+  .core-values-triangle { margin-top: 24px; gap: 16px; }
+  .cv-row { gap: 16px; }
+  .cv-circle { width: 110px; height: 110px; font-size: 15px; padding: 10px; }
+
+  /* 테이블 세로배치 */
+  .info-table th, .info-table td { display: block; width: 100%; border: none; }
+  .info-table th { background-color: rgba(0,0,0,0.03); padding: 12px 16px 4px 16px; border-radius: 6px 6px 0 0; margin-top: 12px;}
+  .info-table td { padding: 4px 16px 12px 16px; border-bottom: 1px solid var(--color-border); margin-bottom: 4px; }
+  .info-table tr:last-child td { border-bottom: none; }
+
+  /* 주요 활동 (아이템 스택) */
+  .activity-item { flex-direction: column; gap: 12px; padding: 24px; text-align: left; }
+  .activity-left { min-width: auto; }
+
+  /* 게시판 레이아웃 */
+  .board-actions { flex-direction: column; align-items: stretch; gap: 16px; }
+  .filter-btns { flex-wrap: wrap; padding-bottom: 8px; gap: 8px; }
+  .filter-btn { flex-shrink: 0; font-size: 13px; }
+  
+  /* 게시글 리스트 스택형 */
+  .post-item { flex-direction: column-reverse; gap: 20px; padding: 24px 0; }
+  .post-right { width: 100%; }
+  
+  /* 글쓰기 폼 스택형 */
+  .write-container { padding: 20px; }
+  .form-grid { grid-template-columns: 1fr; gap: 12px; }
+  .form-group.full { grid-column: span 1; }
+
+  /* 뷰어 글씨체/여백 축소 */
+  .post-view { padding: 24px; }
+  .post-detail-title { font-size: var(--text-2xl); }
+
+  /* 연락하기 폼 모바일 여백 */
+  .contact-form-pane { padding: 32px 20px; }
+
+  /* 푸터 2줄 래핑 */
+  .footer-row { flex-direction: column; gap: 12px; text-align: center; }
+}
+</style>
+</head>
+<body>
+
+  <div class="mobile-overlay" id="mobileOverlay"></div>
+
+  <div class="mobile-nav" id="mobileNav">
+    <div class="mobile-nav-header">
+      <a href="#" class="logo-wrapper" onclick="switchTab('home')" style="text-decoration:none;">
+        <span class="logo-top">자치교육사회적협동조합</span>
+        <span class="logo-bottom">길잡이</span>
+      </a>
+      <button class="mobile-nav-close" id="mobileNavClose" aria-label="메뉴 닫기">&times;</button>
+    </div>
+    <div class="mobile-links">
+      <a href="#" class="mobile-link active" data-tab-target="home" onclick="switchTab('home')">홈</a>
+      <a href="#" class="mobile-link" data-tab-target="introduce" onclick="switchTab('introduce')">길잡이 소개</a>
+      <a href="#" class="mobile-link" data-tab-target="news" onclick="switchTab('news')">소식</a>
+      <a href="#" class="mobile-link" data-tab-target="archiving" onclick="switchTab('archiving')">아카이빙</a>
+      <a href="#" class="mobile-link" data-tab-target="contact" onclick="switchTab('contact')">연락하기</a>
+    </div>
+  </div>
+
+  <header>
+    <div class="container header-inner">
+      <a href="#" class="logo-wrapper" onclick="switchTab('home')">
+        <span class="logo-top">자치교육사회적협동조합</span>
+        <span class="logo-bottom">길잡이</span>
+      </a>
+      <nav class="nav-desktop">
+        <a href="#" class="nav-link active" data-tab-target="home" onclick="switchTab('home')">홈</a>
+        <a href="#" class="nav-link" data-tab-target="introduce" onclick="switchTab('introduce')">길잡이 소개</a>
+        <a href="#" class="nav-link" data-tab-target="news" onclick="switchTab('news')">소식</a>
+        <a href="#" class="nav-link" data-tab-target="archiving" onclick="switchTab('archiving')">아카이빙</a>
+        <a href="#" class="nav-link" data-tab-target="contact" onclick="switchTab('contact')">연락하기</a>
+        <div id="user-auth-area" style="margin-left: 20px;">
+          <button id="login-trigger-btn" class="btn btn-secondary" style="padding: 6px 12px; font-size: 13px;" onclick="openModal('auth')">로그인</button>
+          <div id="user-profile-icon" class="hidden" onclick="openModal('profile')" style="width: 40px; height: 40px; border-radius: 50%; background: #ccc; cursor: pointer; border: 2px solid var(--color-primary);"></div>
+        </div>
+      </nav>
+      <button class="hamburger" id="hamburger" aria-label="메뉴 열기">
+        <span></span>
+        <span></span>
+        <span></span>
+      </button>
+    </div>
+  </header>
+
+  <main>
+    <div id="tab-home" class="tab-content-wrapper">
+      <section id="hero">
+        <div class="container hero-container">
+          <div class="hero-left">
+            <span class="section-tag" style="margin-bottom:16px;">인천 청소년 자치교육</span>
+            <h1>빠른 길보다<br>바른 길로!<br>같이 만드는<br>자치 교육!</h1>
+            <p class="section-desc hero-desc" style="margin: 0 auto 32px auto; max-width:500px;">
+              자치교육사회적협동조합 길잡이는 정해진 길 너머, 청소년이 직접 질문하고 선택하며 함께 성장하는 자치배움의 생태계를 만들어 갑니다.
+            </p>
+            <div class="hero-btns" style="display:flex; gap:16px;">
+              <button class="btn btn-primary" onclick="switchTab('introduce')">길잡이 소개 보기</button>
+              <button class="btn btn-secondary" onclick="switchTab('contact')">함께하기</button>
+            </div>
+          </div>
+          <div class="hero-right">
+            <div class="hero-grid">
+              <div class="hero-box box-1">
+                <h3>협동</h3>
+                <p>함께 만드는<br>더 나은 세상</p>
+              </div>
+              <div class="hero-box box-2">
+                <h3>사랑</h3>
+                <p>서로를 존중하고<br>아끼는 마음</p>
+              </div>
+              <div class="hero-box box-3">
+                <h3>삶</h3>
+                <p>배움과 삶이<br>연결되는 과정</p>
+              </div>
+              <div class="hero-box box-4">
+                <h3>자치</h3>
+                <p>스스로 결정하고<br>책임지는 힘</p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <div class="stats-banner">
+        <div class="container stats-banner-inner">
+          <div class="stat-item">
+            <div class="stat-num">2026</div>
+            <div class="stat-label">설립연도</div>
+          </div>
+          <div class="stat-item">
+            <div class="stat-num">120+</div>
+            <div class="stat-label">청소년 참여자 수</div>
+          </div>
+          <div class="stat-item">
+            <div class="stat-num">45+</div>
+            <div class="stat-label">운영 및 자치 강의 수</div>
+          </div>
+          <div class="stat-item">
+            <div class="stat-num">21</div>
+            <div class="stat-label">조합원 수</div>
+          </div>
+        </div>
+      </div>
+
+      <section class="bg-gray">
+        <div class="container">
+          <span class="section-tag">길잡이를 소개합니다</span>
+          <h2 class="section-title">우리가 만들어가는 교육</h2>
+          
+          <div class="msg-grid">
+            <div class="msg-card reveal">
+              <span class="msg-num">01</span>
+              <h3>인천 청소년 자치교육의 중심</h3>
+              <p>인천을 기반으로 청소년이 스스로 배우고, 결정하고, 실천할 수 있는 자치교육 환경을 만들어 갑니다. PBL(프로젝트 기반 학습)과 회복적 서클을 중심으로 배움과 삶을 연결합니다.</p>
+            </div>
+            <div class="msg-card reveal">
+              <span class="msg-num">02</span>
+              <h3>현장에서 검증된 프로그램</h3>
+              <p>청소년 진로 탐색 프로그램 '사부작사부작', 결마루학교 서클로 배우는 자치강의, 청솔의 집 서클 강의, 인천광역시교육청 학생참여위원회 학생자치 강의 등 실제 교육현장에서 쌓아 올린 최적의 커리큘럼을 제공합니다.</p>
+            </div>
+            <div class="msg-card reveal">
+              <span class="msg-num">03</span>
+              <h3>인천에서 전국으로</h3>
+              <p>인천광역시교육청, 사교육걱정없는세상, 416재단, 유유기지, 은하수학교, 결마루학교와 긴밀히 연대하며 교육 인프라를 전방위로 넓혀가고 활동 영역을 지속적으로 확장하고 있습니다.</p>
+            </div>
+          </div>
+        </div>
+      </section>
+    </div>
+
+    <div id="tab-introduce" class="tab-content-wrapper hidden">
+      <section>
+        <div class="container">
+          <span class="section-tag">MISSION</span>
+          <h2 class="section-title">길잡이의 <span>존재 이유</span></h2>
+          <div class="mission-box">
+            <p class="mission-text">"모든 청소년이 주도적으로 자신의 길을 개척하는 세상을 만든다."<br>
+            <small style="font-size: var(--text-sm); font-weight: normal; color:#555;">청소년이 정해진 길 대신 스스로 길을 만드는 자치교육을 보급합니다.</small></p>
+          </div>
+
+          <div style="margin-top: 80px;">
+            <span class="section-tag">VISION</span>
+            <h2 class="section-title">우리가 바라보는 <span>미래</span></h2>
+            <div class="vision-grid">
+              <div class="vision-card reveal">
+                <h3><span class="vision-idx">01</span> 자치교육 모델 개발·보급</h3>
+                <p>PBL 기반 자치교육 모델을 연구·개발하고, 학교·마을·온라인에서 누구나 투명하고 손쉽게 활용할 수 있도록 공유합니다.</p>
+              </div>
+              <div class="vision-card reveal">
+                <h3><span class="vision-idx">02</span> 청소년·시민의 주도성 강화</h3>
+                <p>청소년과 시민이 스스로 기획·실행하는 프로젝트, 토론, 공론장을 정교하게 설계·지원하여 주체성과 사회참여 역량을 최고조로 키웁니다.</p>
+              </div>
+              <div class="vision-card reveal">
+                <h3><span class="vision-idx">03</span> 교육 인프라 구축</h3>
+                <p>인천을 중심으로 학교, 마을공동체, 사회적경제 조직을 촘촘하게 연결하는 건강하고 유기적인 자치 교육 인프라와 커뮤니티 네트워크를 조성합니다.</p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section class="bg-white">
+        <div class="container">
+          <div class="profile-layout">
+            <div>
+              <span class="section-tag">ABOUT US</span>
+              <h2 class="section-title">길잡이를 <span>소개합니다</span></h2>
+              <div class="profile-content">
+                <p>자치교육사회적협동조합 길잡이는 청소년이 스스로 배우고, 결정하고, 실천하는 자치교육 생태계를 만들기 위해 설립된 사회적협동조합입니다. 저희는 프로젝트 기반 학습(PBL)과 회복적 서클을 핵심 교육 방법론으로 삼아, 청소년이 삶의 주인으로 성장할 수 있는 공간을 만들고 있습니다.</p>
+                <p>진로 탐색, 마을 문제 해결, 학생 자치 역량 강화 등 다양한 프로그램을 통해 교육 현장에서 직접 검증하고 발전시켜 나갑니다. 길잡이는 교육을 통해 더 나은 사회를 만들어가는 조합원, 활동가, 교육자들이 함께 모여 협동조합의 방식으로 운영됩니다. 우리는 공익성과 지속가능성을 함께 추구하며, 인천에서 시작해 전국으로 자치교육의 가치를 확산해 나갑니다.</p>
+              </div>
+            </div>
+            <div>
+              <h3 style="font-size: var(--text-lg); font-weight:700; margin-bottom: 16px;">조합 개요</h3>
+              <table class="info-table">
+                <tr><th>정식 명칭</th><td>자치교육 사회적협동조합 길잡이</td></tr>
+                <tr><th>창립일</th><td>2026년 1월 9일</td></tr>
+                <tr><th>고유번호</th><td>306-82-76379</td></tr>
+                <tr><th>대표이사</th><td>이현우</td></tr>
+                <tr><th>주 소재지</th><td>인천광역시 남동구</td></tr>
+                <tr><th>조합원 구성</th><td>총 21명<br>(사무본부 12명 / 소비자 9명, 2026년 6월 기준)</td></tr>
+              </table>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section class="bg-gray">
+        <div class="container">
+          <span class="section-tag" style="text-align:center;">CORE VALUES</span>
+          <h2 class="section-title" style="text-align:center;">길잡이의 <span>핵심 가치</span></h2>
+          <div class="core-values-triangle reveal">
+            <div class="cv-row">
+              <div class="cv-circle">청소년 중심</div>
+            </div>
+            <div class="cv-row">
+              <div class="cv-circle">효과성</div>
+              <div class="cv-circle">비정파성</div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section class="bg-white">
+        <div class="container">
+          <span class="section-tag">BUSINESS</span>
+          <h2 class="section-title">우리의 <span>주요 활동</span></h2>
+          <p class="section-desc">길잡이는 네 가지 축을 바탕으로 현장 중심의 자치 가치를 실현합니다.</p>
+          
+          <div class="activity-list">
+            <div class="activity-item reveal">
+              <div class="activity-left">01</div>
+              <div class="activity-right">
+                <h4>자치 프로젝트 운영</h4>
+                <p>청소년과 시민이 스스로 기획하고 실행하는 프로젝트를 설계·운영합니다. 진로 탐색, 마을 문제 해결, 공론장 등 삶과 온전히 연결된 주제를 중심으로 자치의 경험을 다채롭게 쌓아갑니다.</p>
+              </div>
+            </div>
+            <div class="activity-item reveal">
+              <div class="activity-left">02</div>
+              <div class="activity-right">
+                <h4>자치교육 연구</h4>
+                <p>PBL과 서클 기반 자치교육 모델을 깊이 있게 연구하고 실제 현장 데이터를 정밀하게 축적합니다. 검증된 구조화 모델을 교육 자료와 체계적인 커리큘럼으로 보급합니다.</p>
+              </div>
+            </div>
+            <div class="activity-item reveal">
+              <div class="activity-left">03</div>
+              <div class="activity-right">
+                <h4>시민·사회 참여</h4>
+                <p>지역사회 공론장, 시민 자치 프로그램, 사회적경제 네트워크 참여를 통해 자치 교육의 외연과 범위를 마을과 사회 전반으로 건강하게 확장합니다.</p>
+              </div>
+            </div>
+            <div class="activity-item reveal">
+              <div class="activity-left">04</div>
+              <div class="activity-right">
+                <h4>자치·서클 강의</h4>
+                <p>학교, 교육지원청, 청소년 기관 등 실제 다채로운 교육현장에서 맞춤형 학생자치 강의와 평화적이고 포용적인 회복적 서클 강의를 왕성하게 진행합니다.</p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section class="bg-gray">
+        <div class="container">
+          <span class="section-tag">ORGANIZATION</span>
+          <h2 class="section-title">사무본부 <span>국별 소개</span></h2>
+          <p class="section-desc">조합의 비전을 유기적으로 함께 실현해 나가는 전문 부서원들을 소개합니다.</p>
+          
+          <div class="bureau-grid">
+            <div class="bureau-card reveal">
+              <h4>행정관리국</h4>
+              <p>• 조합원 등록 및 체계적 정보 관리</p>
+              <p>• 투명한 회계 집행 및 총무 운영 업무</p>
+              <p>• 내부 규정 및 정당한 의사결정 절차 통제</p>
+              <p>• 공문 수발신, 계약 체결 및 핵심 문서 처리</p>
+              <p>• 정기 이사회 및 정기·임시 총회 운영 지원</p>
+            </div>
+            <div class="bureau-card reveal">
+              <h4>대외전략국</h4>
+              <p>• 핵심 기관·단체와의 유기적 협력 관계 구축 및 MOU 체결 관리</p>
+              <p>• 조합 통합 홍보·브랜딩 수립 및 공식 SNS 채널 총괄 운영</p>
+              <p>• 신규 공모 사업 발굴 및 고도화된 제안서 기획/작성</p>
+              <p>• 공식 홈페이지 리뉴얼 및 정기 뉴스레터 대외 콘텐츠 관리</p>
+            </div>
+            <div class="bureau-card reveal">
+              <h4>사회혁신국</h4>
+              <p>• 지역사회 열린 공론장 및 참여형 시민 자치 프로그램 기획</p>
+              <p>• 사회적경제 진영 및 시민사회단체 네트워크와의 긴밀한 연대</p>
+              <p>• 로컬 이슈 파이프라인 캠페인 및 능동적 사회참여 활동 전개</p>
+              <p>• 마을 기반의 연계 융합 프로젝트 기획 및 실행 총괄</p>
+            </div>
+            <div class="bureau-card reveal">
+              <h4>연구개발국</h4>
+              <p>• PBL·서클 기반 고유 자치교육 모델 연구 및 전 과정 문서화</p>
+              <p>• 표준 교육 커리큘럼 설계 및 깊이 있는 교안 연구 개발</p>
+              <p>• 프로그램 종합 성과 분석 및 현장 우수 사례 아카이빙</p>
+              <p>• 자치교육 전문 도서, 연구 보고서 발간 및 다양한 출판물 제작</p>
+            </div>
+            <div class="bureau-card reveal" style="grid-column: span 1;">
+              <h4>교육사업국</h4>
+              <p>• 학생자치 역량 강화 및 회복적 서클 메인 강의 기획/진행</p>
+              <p>• 학교, 교육지원청, 핵심 청소년 기관 대상 매칭 프로그램 위탁 운영</p>
+              <p>• 전문 내부/외부 강사풀 섭외·배정 및 세부 교육 품질 평가 관리</p>
+              <p>• 종합 교육 일정 조율 및 사후 서면 피드백 데이터 수집</p>
+            </div>
+          </div>
+        </div>
+      </section>
+    </div>
+
+    <div id="tab-news" class="tab-content-wrapper hidden">
+      <section>
+        <div class="container">
+          <div class="board-header">
+            <span class="section-tag">NEWS & NOTICE</span>
+            <h2 class="section-title">길잡이 <span>소식</span></h2>
+            <p class="section-desc" style="margin-bottom:0;">자치교육사회적협동조합 길잡이의 활동 소식과 공지사항을 생생하게 전달합니다.</p>
+            
+            <div id="news-board-controls" class="board-actions">
+              <div class="filter-btns" id="news-filters">
+                <button class="filter-btn active" onclick="filterPosts('news', '전체')">전체보기</button>
+                <button class="filter-btn" onclick="filterPosts('news', '공지사항')">공지사항</button>
+                <button class="filter-btn" onclick="filterPosts('news', '활동소식')">활동소식</button>
+                <button class="filter-btn" onclick="filterPosts('news', '언론보도')">언론보도</button>
+              </div>
+              <button class="btn btn-primary" style="padding: 8px 16px; border-radius: 20px;" onclick="toggleWriteForm('news')">+ 새 글 작성</button>
+            </div>
+          </div>
+
+          <div class="write-container hidden" id="write-form-news">
+            <h3>📝 소식 게시글 등록 / 수정</h3>
+            <form id="form-news" onsubmit="handlePostSubmit(event, 'news')">
+              <div class="form-grid">
+                <div class="form-group">
+                  <label for="news-title">제목</label>
+                  <input type="text" id="news-title" required placeholder="게시글 제목을 입력하세요.">
+                </div>
+                <div class="form-group">
+                  <label for="news-cat">카테고리</label>
+                  <select id="news-cat" required>
+                    <option value="공지사항">공지사항</option>
+                    <option value="활동소식">활동소식</option>
+                    <option value="언론보도">언론보도</option>
+                  </select>
+                </div>
+                <div class="form-group full">
+                  <label for="news-content">내용</label>
+                  <textarea id="news-content" rows="6" required placeholder="소식 내용을 상세히 입력하세요."></textarea>
+                </div>
+                <div class="form-group full">
+                  <label for="news-img">대표 이미지 URL (선택)</label>
+                  <input type="text" id="news-img" placeholder="https://example.com/image.jpg 구조의 이미지 주소를 적어주세요.">
+                </div>
+              </div>
+              <div style="display:flex; gap:8px; justify-content: flex-end;">
+                <button type="button" class="btn btn-secondary" style="padding: 8px 16px;" onclick="toggleWriteForm('news')">취소</button>
+                <button type="submit" class="btn btn-primary" style="padding: 8px 16px;">저장하기</button>
+              </div>
+            </form>
+          </div>
+
+          <div id="board-container-news">
+            <div class="post-list" id="post-list-news"></div>
+          </div>
+          <div class="post-view hidden" id="post-view-news"></div>
+
+        </div>
+      </section>
+    </div>
+
+    <div id="tab-archiving" class="tab-content-wrapper hidden">
+      <section>
+        <div class="container">
+          <div class="board-header">
+            <span class="section-tag">ARCHIVE</span>
+            <h2 class="section-title">길잡이 <span>아카이빙</span></h2>
+            <p class="section-desc" style="margin-bottom:0;">자치교육사회적협동조합 길잡이의 모든 활동 연구 자료, 교안, 기록물을 체계적으로 보관합니다.</p>
+            
+            <div id="archiving-board-controls" class="board-actions">
+              <div class="filter-btns" id="archiving-filters">
+                <button class="filter-btn active" onclick="filterPosts('archiving', '전체')">전체보기</button>
+                <button class="filter-btn" onclick="filterPosts('archiving', '교육교안')">교육교안</button>
+                <button class="filter-btn" onclick="filterPosts('archiving', '연구자료')">연구자료</button>
+                <button class="filter-btn" onclick="filterPosts('archiving', '활동기록')">활동기록</button>
+                <button class="filter-btn" onclick="filterPosts('archiving', '회의록')">회의록</button>
+                <button class="filter-btn" onclick="filterPosts('archiving', '조합기본')">조합기본</button>
+              </div>
+              <button class="btn btn-primary" style="padding: 8px 16px; border-radius: 20px;" onclick="toggleWriteForm('archiving')">+ 자료 등록</button>
+            </div>
+          </div>
+
+          <div class="write-container hidden" id="write-form-archiving">
+            <h3>📁 아카이빙 자료 등록 / 수정</h3>
+            <form id="form-archiving" onsubmit="handlePostSubmit(event, 'archiving')">
+              <div class="form-grid">
+                <div class="form-group">
+                  <label for="archiving-title">자료명 / 제목</label>
+                  <input type="text" id="archiving-title" required placeholder="자료의 제목을 입력하세요.">
+                </div>
+                <div class="form-group">
+                  <label for="archiving-cat">카테고리</label>
+                  <select id="archiving-cat" required>
+                    <option value="교육교안">교육교안</option>
+                    <option value="연구자료">연구자료</option>
+                    <option value="활동기록">활동기록</option>
+                    <option value="회의록">회의록</option>
+                    <option value="조합기본">조합기본</option>
+                  </select>
+                </div>
+                <div class="form-group full">
+                  <label for="archiving-content">자료 요약 및 설명</label>
+                  <textarea id="archiving-content" rows="6" required placeholder="아카이빙 자료에 대한 설명을 상세하게 입력하세요."></textarea>
+                </div>
+                <div class="form-group full">
+                  <label for="archiving-img">대표 이미지 URL (선택)</label>
+                  <input type="text" id="archiving-img" placeholder="이미지 주소를 적어주세요.">
+                </div>
+              </div>
+              <div style="display:flex; gap:8px; justify-content: flex-end;">
+                <button type="button" class="btn btn-secondary" style="padding: 8px 16px;" onclick="toggleWriteForm('archiving')">취소</button>
+                <button type="submit" class="btn btn-primary" style="padding: 8px 16px;">저장하기</button>
+              </div>
+            </form>
+          </div>
+
+          <div id="board-container-archiving">
+            <div class="post-list" id="post-list-archiving"></div>
+          </div>
+          <div class="post-view hidden" id="post-view-archiving"></div>
+
+        </div>
+      </section>
+    </div>
+
+    <div id="tab-contact" class="tab-content-wrapper hidden">
+      <section>
+        <div class="container">
+          <span class="section-tag">CONTACT US</span>
+          <h2 class="section-title">길잡이와 <span>소통하기</span></h2>
+          <p class="section-desc">조합 가입 문의, 강의 문의, 협력 제안 등 다양한 의견을 기다립니다. 아래 양식을 작성해주시면 즉시 답변이 전송됩니다.</p>
+          
+          <div class="contact-layout">
+            <div class="contact-info-pane">
+              <div class="contact-meta-item">
+                <div class="contact-icon-box">📍</div>
+                <div class="contact-meta-text">
+                  <h4>주소지</h4>
+                  <p>인천광역시 남동구</p>
+                </div>
+              </div>
+              <div class="contact-meta-item">
+                <div class="contact-icon-box">📞</div>
+                <div class="contact-meta-text">
+                  <h4>대표 전화번호</h4>
+                  <p>010-8752-9125 (사무본부)</p>
+                </div>
+              </div>
+              <div class="contact-meta-item">
+                <div class="contact-icon-box">✉️</div>
+                <div class="contact-meta-text">
+                  <h4>이메일</h4>
+                  <p>jachicoop@gmail.com</p>
+                </div>
+              </div>
+            </div>
+
+            <div class="contact-form-pane">
+              <form id="direct-email-form" onsubmit="sendEmailViaClient(event)">
+                <div class="form-group" style="margin-bottom: 20px;">
+                  <label for="contact-email">보내시는 분 이메일 주소</label>
+                  <input type="email" id="contact-email" required placeholder="이메일 주소를 입력해주세요.">
+                </div>
+                <div class="form-group" style="margin-bottom: 20px;">
+                  <label for="contact-subject">문의 제목</label>
+                  <input type="text" id="contact-subject" required placeholder="제목을 입력해주세요.">
+                </div>
+                <div class="form-group" style="margin-bottom: 20px;">
+                  <label for="contact-message">문의 내용</label>
+                  <textarea id="contact-message" rows="6" required placeholder="문의 내용을 상세히 남겨주세요."></textarea>
+                </div>
+                <button type="submit" class="btn btn-primary" style="width: 100%; justify-content: center; margin-top: 12px;">전송하기</button>
+              </form>
+            </div>
+          </div>
+        </div>
+      </section>
+    </div>
+  </main>
+
+  <footer>
+    <div class="container">
+      <div class="footer-row">
+        <a href="javascript:void(0)" class="footer-link" onclick="openModal('privacy')">개인정보처리방침</a>
+        <a href="javascript:void(0)" class="footer-link" onclick="openModal('terms')">이용약관</a>
+        <a href="javascript:void(0)" class="footer-link" onclick="switchTab('contact')">문의하기</a>
+        <span class="footer-copyright">© 자치교육 사회적협동조합 길잡이</span>
+      </div>
+    </div>
+  </footer>
+
+  <div class="footer-modal-overlay" id="modal-privacy" onclick="closeModalOnOverlay(event, 'privacy')">
+    <div class="footer-modal">
+      <button class="modal-close-btn" onclick="closeModal('privacy')">&times;</button>
+      <div class="modal-content">
+        <h3>개인정보처리방침</h3>
+        <p class="modal-text">자치교육 사회적협동조합 길잡이(이하 "회사")는 개인정보보호법에 따라 이용자의 개인정보를 보호하고 이와 관련한 고충을 신속하고 원활하게 처리할 수 있도록 다음과 같이 개인정보 처리방침을 수립·공개합니다.
+
+제1조 (개인정보의 처리 목적)
+회사는 다음의 목적을 위하여 개인정보를 처리합니다:
+서비스 제공 및 회원 관리
+
+제2조 (처리하는 개인정보의 항목)
+회사는 다음의 개인정보를 처리합니다:
+필수 수집 항목: 이름, 이메일, 연락처
+
+제3조 (개인정보의 처리 및 보유 기간)
+회원 탈퇴 시까지
+단, 관계 법령에 의해 보존할 필요가 있는 경우 해당 법령에서 정한 기간 동안 보관합니다.
+
+제4조 (개인정보의 제3자 제공)
+회사는 이용자의 개인정보를 제3자에게 제공하지 않습니다.
+
+제5조 (개인정보 처리의 위탁)
+회사는 개인정보 처리를 위탁하지 않습니다.
+
+제6조 (정보주체의 권리·의무 및 그 행사방법)
+이용자는 개인정보 열람, 정정, 삭제, 처리정지를 요청할 수 있습니다. 이용자는 언제든지 개인정보 처리에 대한 동의를 철회할 수 있으며, 회사는 지체 없이 처리합니다.
+
+제7조 (개인정보의 파기)
+개인정보 보유기간이 경과하거나 처리 목적이 달성된 경우 지체 없이 파기합니다. 전자적 파일 형태는 복구 불가능한 방법으로 영구 삭제하며, 출력물은 분쇄 또는 소각합니다.
+
+제7조의3 (모바일 앱 접근권한)
+앱 서비스 이용 시 특정 기기 접근권한을 요청할 수 있습니다. 접근권한은 서비스 제공에 필요한 최소한으로 요청하며, 이용자는 언제든지 기기 설정에서 철회할 수 있습니다.
+
+제8조 (개인정보 보호책임자)
+성명: 장민성
+이메일: jachicoop@gmail.com
+문의처: 010-8864-4798</p>
+      </div>
+    </div>
+  </div>
+
+  <div class="footer-modal-overlay" id="modal-terms" onclick="closeModalOnOverlay(event, 'terms')">
+    <div class="footer-modal">
+      <button class="modal-close-btn" onclick="closeModal('terms')">&times;</button>
+      <div class="modal-content">
+        <h3>이용약관</h3>
+        <p class="modal-text">자치교육 사회적협동조합 길잡이 홈페이지 이용약관
+
+총칙
+아래 이용약관은 https://jachicoop.com 웹사이트 및 이를 통해 제공되는 모든 콘텐츠, 서비스, 제품(이하 "웹사이트")의 이용에 적용됩니다. 본 웹사이트는 자치교육사회적협동조합 길잡이(이하 "길잡이")가 소유하고 운영합니다. 웹사이트 이용은 본 약관의 모든 조건과 길잡이가 수시로 게시하는 운영 규칙, 정책(길잡이 개인정보처리방침 포함) 및 절차에 대한 동의를 전제로 합니다(이하 통칭하여 "계약").
+웹사이트에 접속하거나 이용하기 전에 본 계약을 주의 깊게 읽어 주십시오. 웹사이트의 어떠한 부분에라도 접속하거나 이용하는 행위는 본 계약의 모든 조건에 구속되는 것에 동의함을 의미합니다. 본 계약의 모든 조건에 동의하지 않을 경우, 웹사이트에 접속하거나 서비스를 이용할 수 없습니다. 본 웹사이트는 만 0세 이상의 개인에 한하여 이용 가능합니다.
+
+계정 및 사이트
+웹사이트에 블로그 또는 사이트를 개설하는 경우, 이용자는 자신의 계정과 블로그의 보안을 유지할 책임이 있으며, 해당 계정 및 블로그와 관련하여 발생하는 모든 활동에 대해 전적인 책임을 집니다. 이용자는 타인의 명칭이나 명성을 도용하는 방식 등 오해를 유발하거나 위법한 방식으로 블로그를 설명하거나 키워드를 지정해서는 안 됩니다. 길잡이는 부적절하거나 위법하다고 판단되는 설명 또는 키워드를 변경하거나 삭제할 수 있습니다. 이용자는 자신의 블로그, 계정 또는 기타 보안 침해 사항을 즉시 길잡이에 통보해야 합니다. 길잡이는 이용자의 행위 또는 부작위로 인해 발생하는 어떠한 손해에 대해서도 책임을 지지 않습니다.
+
+이용자의 책임
+블로그 운영, 댓글 작성, 자료 게시, 링크 게시 등 어떠한 방식으로든 웹사이트를 통해 콘텐츠(이하 "콘텐츠")를 게시하는 경우, 이용자는 해당 콘텐츠의 내용과 그로 인한 모든 결과에 대해 전적인 책임을 지며, 다음 사항을 진술하고 보증합니다.
+- 해당 콘텐츠의 다운로드, 복사, 이용이 제3자의 지식재산권을 침해하지 않을 것
+- 고용주가 해당 콘텐츠에 대한 지식재산권을 보유하는 경우 허가를 받았을 것
+- 바이러스 등 유해하거나 파괴적인 요소가 없을 것
+- 스팸이나 불법적 목적이 아닐 것
+(이하 중략: 상세 이용약관은 조합 기준에 따름)
+
+기타
+본 계약은 적용 법률에서 달리 정하지 않는 한 인천광역시 법률에 따라 규율되며, 관련 분쟁의 관할 법원은 인천광역시에 소재한 법원으로 합니다.</p>
+      </div>
+    </div>
+  </div>
+
+  <div class="footer-modal-overlay" id="modal-auth">
+    <div class="footer-modal">
+      <button class="modal-close-btn" onclick="closeModal('auth')">&times;</button>
+      <div class="modal-content" id="auth-form-content">
+        <h3 id="auth-title">로그인</h3>
+        <input type="email" id="auth-email" placeholder="이메일" style="width:100%; padding:10px; margin-bottom:10px; border:1px solid #ddd;">
+        <input type="password" id="auth-password" placeholder="비밀번호" style="width:100%; padding:10px; margin-bottom:10px; border:1px solid #ddd;">
+        <button onclick="handleAuth()" id="auth-submit-btn" class="btn btn-primary" style="width:100%;">로그인</button>
+        <p style="margin-top:15px; text-align:center; cursor:pointer; color:var(--color-primary);" onclick="toggleAuthMode()">회원가입으로 전환</p>
+      </div>
+    </div>
+  </div>
+
+  <div class="footer-modal-overlay" id="modal-profile">
+    <div class="footer-modal">
+      <button class="modal-close-btn" onclick="closeModal('profile')">&times;</button>
+      <div class="modal-content">
+        <h3>계정 관리</h3>
+        <input type="text" id="edit-nickname" placeholder="닉네임" style="width:100%; padding:10px; margin-bottom:10px;">
+        <button onclick="updateProfileInfo()" class="btn btn-primary" style="width:100%;">프로필 저장</button>
+        <hr style="margin: 20px 0;">
+        <button onclick="logout()" class="btn btn-secondary" style="width:100%;">로그아웃</button>
+        <button onclick="deleteAccount()" class="btn" style="width:100%; color:red; margin-top:10px;">회원 탈퇴</button>
+      </div>
+    </div>
+  </div>
+
+
+
+  <script type="module">
+    // 1. Firebase SDK Import (v10 모듈형 방식)
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.1/firebase-app.js";
+    import { getFirestore, collection, getDocs, addDoc, updateDoc, deleteDoc, doc, serverTimestamp, query, orderBy } from "https://www.gstatic.com/firebasejs/10.8.1/firebase-firestore.js";
+    import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword, signOut, onAuthStateChanged, deleteUser } from "https://www.gstatic.com/firebasejs/10.8.1/firebase-auth.js";
+
+    // 2. Firebase Configuration
+    const firebaseConfig = {
+      apiKey: "AIzaSyDBRjrkW5cdBAfMaET-Z8x9s8eqTCCRhPA",
+      authDomain: "jachicoop-3e984.firebaseapp.com",
+      projectId: "jachicoop-3e984",
+      storageBucket: "jachicoop-3e984.firebasestorage.app",
+      messagingSenderId: "93571411294",
+      appId: "1:93571411294:web:4b38005767b8c5c99d33cf",
+      measurementId: "G-62JVYDBMXP"
+    };
+
+    // 3. Firebase 초기화
+    const app = initializeApp(firebaseConfig);
+    const db = getFirestore(app);
+
+    // 전역 상태 변수
+    let currentNewsFilter = '전체';
+    let currentArchiveFilter = '전체';
+    let editingPostId = null;
+    let localCache = { news: [], archiving: [] }; // 상세 보기 연동을 위한 임시 캐시
+
+    // ── 탭 전환 시스템 ──
+    window.switchTab = function(tabId) {
+      document.querySelectorAll('.tab-content-wrapper').forEach(el => el.classList.add('hidden'));
+      document.getElementById('tab-' + tabId).classList.remove('hidden');
+
+      document.querySelectorAll('.nav-link, .mobile-link').forEach(el => {
+        if(el.getAttribute('data-tab-target') === tabId) el.classList.add('active');
+        else el.classList.remove('active');
+      });
+
+      // 탭 전환 시 게시글 뷰어가 켜져있으면 리스트로 리셋하고 데이터 로드
+      if (tabId === 'news' || tabId === 'archiving') {
+        window.closePostView(tabId);
+        document.getElementById('write-form-' + tabId).classList.add('hidden');
+        window.renderBoard(tabId);
+      }
+      
+      window.closeMobileMenu(); // 모바일 환경에서 탭 전환 시 사이드 메뉴 자동 닫기
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
+
+    // ── 모바일 메뉴 컨트롤 ──
+    const hamburger = document.getElementById('hamburger');
+    const mobileNav = document.getElementById('mobileNav');
+    const mobileOverlay = document.getElementById('mobileOverlay');
+    const mobileNavCloseBtn = document.getElementById('mobileNavClose');
+
+    window.openMobileMenu = function() {
+      mobileNav.classList.add('open');
+      mobileOverlay.classList.add('open');
+      document.body.style.overflow = 'hidden';
+    }
+    
+    window.closeMobileMenu = function() {
+      mobileNav.classList.remove('open');
+      mobileOverlay.classList.remove('open');
+      document.body.style.overflow = '';
+    }
+
+    hamburger.addEventListener('click', window.openMobileMenu);
+    mobileNavCloseBtn.addEventListener('click', window.closeMobileMenu);
+    mobileOverlay.addEventListener('click', window.closeMobileMenu);
+
+    // ── 모달 컨트롤 ──
+    window.openModal = function(id) {
+      document.getElementById('modal-' + id).classList.add('open');
+      document.body.style.overflow = 'hidden';
+    }
+    window.closeModal = function(id) {
+      document.getElementById('modal-' + id).classList.remove('open');
+      document.body.style.overflow = '';
+    }
+    window.closeModalOnOverlay = function(e, id) {
+      if (e.target === e.currentTarget) window.closeModal(id);
+    }
+
+    // ── FIREBASE CRUD: 게시글 리스트 렌더링 ──
+    window.renderBoard = async function(type) {
+      const listEl = document.getElementById('post-list-' + type);
+      listEl.innerHTML = '<div style="padding: 40px 0; text-align: center; color: var(--color-text-muted);">데이터를 불러오는 중입니다...</div>';
+      
+      try {
+        // Firebase에서 데이터 가져오기 (작성일 기준 내림차순 정렬)
+        const q = query(collection(db, type), orderBy("date", "desc"));
+        const querySnapshot = await getDocs(q);
+        
+        const data = [];
+        querySnapshot.forEach((docSnap) => {
+          data.push({ id: docSnap.id, ...docSnap.data() });
+        });
+
+        localCache[type] = data; // 상세 보기를 위해 로컬 캐시에 임시 저장
+
+        const currentFilter = type === 'news' ? currentNewsFilter : currentArchiveFilter;
+        const filteredData = currentFilter === '전체' ? data : data.filter(item => item.category === currentFilter);
+        
+        listEl.innerHTML = '';
+        if(filteredData.length === 0) {
+          listEl.innerHTML = '<div style="padding: 40px 0; text-align: center; color: var(--color-text-muted);">등록된 게시글이 없습니다.</div>';
+          return;
+        }
+
+        filteredData.forEach(item => {
+          const fallbackImg = type === 'news' 
+            ? 'https://images.unsplash.com/photo-1454165804606-c3d57bc86b40?auto=format&fit=crop&w=400&q=80' 
+            : 'https://images.unsplash.com/photo-1568228117071-7009ff5a0c36?auto=format&fit=crop&w=400&q=80';
+          const imgSrc = item.img ? item.img : fallbackImg;
+          
+          // id를 String으로 전달하기 위해 '${item.id}' 형태 적용
+          const html = `
+            <div class="post-item" onclick="viewPost('${type}', '${item.id}')">
+              <div class="post-left">
+                <div class="post-meta">
+                  <span>${item.date}</span>
+                  <span class="post-cat">${item.category}</span>
+                </div>
+                <h4 class="post-title">${item.title}</h4>
+                <p class="post-excerpt">${item.excerpt}</p>
+              </div>
+              <div class="post-right">
+                <div class="post-img-wrapper">
+                  <img src="${imgSrc}" alt="게시물 썸네일">
+                </div>
+              </div>
+            </div>
+          `;
+          listEl.insertAdjacentHTML('beforeend', html);
+        });
+      } catch (error) {
+        console.error("데이터 로드 에러: ", error);
+        listEl.innerHTML = '<div style="padding: 40px 0; text-align: center; color: #e74c3c;">데이터를 불러오는 데 실패했습니다.</div>';
+      }
+    }
+
+    // ── 게시글 카테고리 필터링 ──
+    window.filterPosts = function(type, category) {
+      if(type === 'news') currentNewsFilter = category;
+      else currentArchiveFilter = category;
+
+      const btns = document.querySelectorAll(`#${type}-filters .filter-btn`);
+      btns.forEach(btn => {
+        if(btn.innerText === (category === '전체' ? '전체보기' : category)) btn.classList.add('active');
+        else btn.classList.remove('active');
+      });
+      window.renderBoard(type);
+    }
+
+    // ── CRUD: 게시글 보기 ──
+    window.viewPost = function(type, id) {
+      const data = localCache[type];
+      const post = data.find(p => p.id === id);
+      if(!post) return;
+
+      document.getElementById('board-container-' + type).classList.add('hidden');
+      document.getElementById(type + '-board-controls').classList.add('hidden');
+      const viewEl = document.getElementById('post-view-' + type);
+      viewEl.classList.remove('hidden');
+
+      window.scrollTo({ top: viewEl.offsetTop - 100, behavior: 'smooth' });
+
+      viewEl.innerHTML = `
+        <button class="btn btn-secondary" style="margin-bottom: 24px; font-size: 13px; padding: 8px 16px;" onclick="closePostView('${type}')">← 목록으로 돌아가기</button>
+        <div class="post-detail-header">
+          <span class="post-cat" style="display:inline-block; margin-bottom:12px;">${post.category}</span>
+          <h2 class="post-detail-title">${post.title}</h2>
+          <span style="color: #888; font-size: 14px;">${post.date}</span>
+        </div>
+        ${post.img ? `<div style="margin: 32px 0;"><img src="${post.img}" style="width: 100%; max-height: 400px; object-fit: cover; border-radius: 12px;"></div>` : ''}
+        <div style="font-size: 16px; line-height: 1.8; color: var(--color-text-main); margin-bottom: 48px; white-space: pre-wrap;">${post.excerpt}</div>
+        <div style="display: flex; gap: 8px; justify-content: flex-end; border-top: 1px solid var(--color-border); padding-top: 24px;">
+          <button class="btn btn-secondary" onclick="editPost('${type}', '${post.id}')">수정</button>
+          <button class="btn btn-primary" style="background: #e74c3c; border:none;" onclick="deletePost('${type}', '${post.id}')">삭제</button>
+        </div>
+      `;
+    }
+
+    // ── CRUD: 게시글 보기 닫기 ──
+    window.closePostView = function(type) {
+      document.getElementById('post-view-' + type).classList.add('hidden');
+      document.getElementById('board-container-' + type).classList.remove('hidden');
+      document.getElementById(type + '-board-controls').classList.remove('hidden');
+    }
+
+    // ── CRUD: 폼 토글 ──
+    window.toggleWriteForm = function(type) {
+      const formEl = document.getElementById('write-form-' + type);
+      formEl.classList.toggle('hidden');
+      
+      // 폼이 닫히면 초기화
+      if(formEl.classList.contains('hidden')) {
+        editingPostId = null;
+        document.getElementById('form-' + type).reset();
+      }
+    }
+
+    // ── CRUD: 수정하기 세팅 ──
+    window.editPost = function(type, id) {
+      const data = localCache[type];
+      const post = data.find(p => p.id === id);
+      if(!post) return;
+
+      editingPostId = id;
+      document.getElementById(type + '-title').value = post.title;
+      document.getElementById(type + '-cat').value = post.category;
+      document.getElementById(type + '-content').value = post.excerpt;
+      document.getElementById(type + '-img').value = post.img || '';
+
+      window.closePostView(type);
+      document.getElementById('write-form-' + type).classList.remove('hidden');
+      document.getElementById('write-form-' + type).scrollIntoView({ behavior: 'smooth', block: 'center' });
+    }
+
+    // ── FIREBASE CRUD: 삭제하기 ──
+    window.deletePost = async function(type, id) {
+      if(!confirm('정말 이 게시글을 삭제하시겠습니까?')) return;
+      
+      try {
+        await deleteDoc(doc(db, type, id));
+        alert('삭제 완료되었습니다.');
+        window.closePostView(type);
+        window.renderBoard(type);
+      } catch (error) {
+        console.error("삭제 에러: ", error);
+        alert("게시글 삭제에 실패했습니다.");
+      }
+    }
+
+
+
+    const auth = getAuth();
+      // 로그인 상태 감지
+    onAuthStateChanged(auth, (user) => {
+      const loginBtn = document.getElementById('login-trigger-btn');
+      const profileIcon = document.getElementById('user-profile-icon');
+      if (user) {
+        loginBtn.classList.add('hidden');
+        profileIcon.classList.remove('hidden');
+      } else {
+        loginBtn.classList.remove('hidden');
+        profileIcon.classList.add('hidden');
+      }
+    });
+
+    window.handleAuth = async () => {
+      const email = document.getElementById('auth-email').value;
+      const password = document.getElementById('auth-password').value;
+      const isSignup = document.getElementById('auth-submit-btn').innerText === '회원가입';
+      try {
+        if (isSignup) await createUserWithEmailAndPassword(auth, email, password);
+        else await signInWithEmailAndPassword(auth, email, password);
+        alert('성공!');
+        window.closeModal('auth');
+      } catch (err) { alert(err.message); }
+    };
+
+    window.toggleAuthMode = () => {
+      const btn = document.getElementById('auth-submit-btn');
+      const title = document.getElementById('auth-title');
+      if (btn.innerText === '로그인') {
+        btn.innerText = '회원가입';
+        title.innerText = '회원가입';
+      } else {
+        btn.innerText = '로그인';
+        title.innerText = '로그인';
+      }
+    };
+
+    window.logout = () => { signOut(auth); window.closeModal('profile'); };
+
+
+
+
+    // ── FIREBASE CRUD: 폼 제출 처리 (등록 및 수정) ──
+    window.handlePostSubmit = async function(e, type) {
+      e.preventDefault();
+      
+      const title = document.getElementById(type + '-title').value;
+      const category = document.getElementById(type + '-cat').value;
+      const excerpt = document.getElementById(type + '-content').value;
+      const img = document.getElementById(type + '-img').value;
+      
+      // 로딩 상태 UI 적용
+      const submitBtn = e.target.querySelector('button[type="submit"]');
+      const originalText = submitBtn.innerText;
+      submitBtn.innerText = '저장 중...';
+      submitBtn.disabled = true;
+
+
+
+      
+
+
+
+
+
+      try {
+        if (editingPostId) {
+          // 기존 게시글 수정 (Update)
+          const docRef = doc(db, type, editingPostId);
+          await updateDoc(docRef, {
+            title: title,
+            category: category,
+            excerpt: excerpt,
+            img: img
+          });
+          alert('게시글이 성공적으로 수정되었습니다.');
+        } else {
+          // 신규 게시글 등록 (Create)
+          const today = new Date();
+          const dateStr = today.getFullYear() + '-' + String(today.getMonth() + 1).padStart(2, '0') + '-' + String(today.getDate()).padStart(2, '0');
+          
+          await addDoc(collection(db, type), {
+            date: dateStr,
+            category: category,
+            title: title,
+            excerpt: excerpt,
+            img: img,
+            timestamp: serverTimestamp() // 정렬을 위한 타임스탬프
+          });
+          alert('새로운 게시글이 등록되었습니다.');
+        }
+        
+        editingPostId = null; 
+        e.target.reset();
+        window.toggleWriteForm(type);
+        window.renderBoard(type);
+
+      } catch (error) {
+        console.error("게시글 저장 에러: ", error);
+        alert("게시글 저장에 실패했습니다.");
+      } finally {
+        submitBtn.innerText = originalText;
+        submitBtn.disabled = false;
+      }
+    }
+
+    // ── FIREBASE 연락하기 폼 전송 (이메일 대신 DB 저장) ──
+    window.sendEmailViaClient = async function(e) {
+      e.preventDefault();
+      const email = document.getElementById('contact-email').value;
+      const subject = document.getElementById('contact-subject').value;
+      const message = document.getElementById('contact-message').value;
+      
+      const submitBtn = e.target.querySelector('button[type="submit"]');
+      const originalText = submitBtn.innerText;
+      submitBtn.innerText = '메시지 전송 중...';
+      submitBtn.disabled = true;
+
+      try {
+        // contacts 컬렉션에 문의 내용 저장
+        await addDoc(collection(db, "contacts"), {
+          email: email,
+          subject: subject,
+          message: message,
+          timestamp: serverTimestamp()
+        });
+        alert('성공적으로 문의가 접수되었습니다. 확인 후 기재하신 이메일로 회신드리겠습니다.');
+        e.target.reset();
+      } catch (error) {
+        console.error("문의 접수 에러: ", error);
+        alert('통신 오류로 인해 문의 접수에 실패했습니다. 잠시 후 다시 시도해주세요.');
+      } finally {
+        submitBtn.innerText = originalText;
+        submitBtn.disabled = false;
+      }
+    }
+
+    // ── SCROLL REVEAL ANIMATION ──
+    const observerOptions = { root: null, rootMargin: '0px', threshold: 0.15 };
+    const observer = new IntersectionObserver((entries, observer) => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          entry.target.style.opacity = '1';
+          entry.target.style.transform = 'translateY(0)';
+          observer.unobserve(entry.target);
+        }
+      });
+    }, observerOptions);
+
+    // ── 초기 로드 처리 ──
+    document.addEventListener('DOMContentLoaded', () => {
+      document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
+      window.switchTab('home'); // 홈화면 시작
+    });
+  </script>
+
+</body>
+</html>
